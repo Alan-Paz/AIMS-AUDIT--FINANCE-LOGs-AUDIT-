@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TCC 2026 - AIMS AUDIT | Scanner REDE HASH TOPOLOGIA  Duino-Coin</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0b0b0e;
+            color: #e1e1e6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* Estilo do Topo TCC 2026 */
+        .tcc-header {
+            text-align: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #ffa100;
+            padding-bottom: 10px;
+            width: 100%;
+            max-width: 950px;
+        }
+        .tcc-header h2 {
+            color: #ffa100;
+            margin: 0 0 5px 0;
+            font-size: 22px;
+            text-shadow: 0 0 10px rgba(255,161,0,0.4);
+        }
+        .tcc-header p {
+            color: #00ffcc;
+            margin: 0;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        h1 { color: #ffa100; margin-bottom: 5px; text-align: center; text-shadow: 0 0 10px rgba(255,161,0,0.3); }
+        p { color: #a8a8b3; max-width: 950px; text-align: center; margin-bottom: 15px; line-height: 1.5; font-size: 13px; }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button, input {
+            background-color: #16161a; color: #fff; border: 2px solid #ffa100;
+            padding: 10px 18px; font-size: 14px; font-weight: bold; border-radius: 8px; outline: none; transition: all 0.2s ease;
+            text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
+        }
+        input { border-color: #29292e; width: 240px; }
+        input:focus { border-color: #ffa100; }
+        button:hover, a.btn-link:hover { background-color: #ffa100; color: #0b0b0e; transform: translateY(-2px); cursor: pointer; }
+        button.active { background-color: #00ffcc; border-color: #00ffcc; color: #0b0b0e; }
+        button.export, a.btn-link { border-color: #00ffcc; color: #00ffcc; }
+        button.export:hover, a.btn-link:hover { background-color: #00ffcc; color: #0b0b0e; }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            width: 100%;
+            max-width: 950px;
+        }
+
+        .panel {
+            background-color: #121216; border-radius: 8px; padding: 15px; border: 1px solid #202028;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); box-sizing: border-box;
+        }
+
+        .panel.full { grid-column: span 2; }
+
+        h3 { margin-top: 0; color: #ffa100; font-size: 15px; border-bottom: 1px solid #202028; padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+
+        canvas { background-color: #070709; border-radius: 6px; display: block; width: 100%; }
+
+        .hash-list {
+            list-style: none; padding: 0; margin: 0; max-height: 160px; overflow-y: auto; font-family: monospace; font-size: 11px;
+        }
+        .hash-item {
+            background-color: #1a1a20; margin-bottom: 6px; padding: 8px; border-radius: 4px;
+            border-left: 4px solid #ffa100; display: flex; justify-content: space-between; align-items: center;
+        }
+        .hash-item span { color: #04d361; }
+        .hash-item.fraud { border-left-color: #ff0055; background-color: #261219; }
+        .hash-item.fraud span { color: #ff0055; }
+
+        .matrix-status {
+            grid-column: span 2;
+            background-color: #121216; border: 1px solid #202028; padding: 12px; border-radius: 8px;
+            font-family: monospace; font-size: 12px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; text-align: center; color: #a8a8b3;
+        }
+        .matrix-status div span { color: #ffa100; font-weight: bold; display: block; margin-top: 4px; font-size: 13px; }
+        .fraud-alert { color: #ff0055 !important; animation: blink 1s infinite; }
+
+        /* Estilo da Logo e do Container Wokwi */
+        .wokwi-header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .wokwi-logo {
+            max-height: 35px;
+            object-fit: contain;
+        }
+
+        iframe {
+            width: 100%;
+            height: 400px;
+            border: 2px solid #202028;
+            border-radius: 6px;
+            background-color: #070709;
+        }
+
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <!-- Cabeçalho do TCC -->
+    <div class="tcc-header">
+        <h2>TCC 2026 - Grupo Tema: AIMS AUDIT</h2>
+        <p>Auditoria Inteligente e Monitoramento de Spoofing em Redes Distribuídas</p>
+    </div>
+
+    <h1>Scanner 3D, Wokwi, Spoofing & Mapa Sonoro: Duino-Coin</h1>
+    <p>Integração do Tratado de Alan Paz, telemetria de hardware Wokwi em tempo real, detecção de fraude e rastreio de hashes.</p>
+
+    <div class="controls">
+        <button id="startBtn" onclick="toggleSystem()">Ativar Sistema Integrado</button>
+        <input type="text" id="searchHashInput" placeholder="🔍 Buscar ID Hash na rede..." oninput="searchHashInNetwork()">
+        <button class="export" onclick="exportTraceLogTXT()">Exportar Log TXT (Traces)</button>
+        <a href="https://wokwi.com/projects/476352069601737729" target="_blank" class="btn-link">🔗 Abrir Projeto Wokwi</a>
+    </div>
+
+    <div class="dashboard">
+        <!-- Holograma 3D com IDs, Rota e Spoofing -->
+        <div class="panel full">
+            <h3>Holograma 3D de Rede & Alerta de Spoofing <span id="fraudStatusBadge" style="font-size:12px; color:#04d361;">[Rede Segura]</span></h3>
+            <canvas id="holoCanvas" width="920" height="280"></canvas>
+        </div>
+
+        <!-- Painel Embutido do Wokwi com a Logo da Instituição Acima -->
+        <div class="panel full">
+            <div class="wokwi-header-container">
+                <span style="color: #ffa100; font-size: 15px; font-weight: bold;">Analise Algoritmo TIADMHA em Tempo Real (Hardware ESP32)</span>
+                <!-- Logo da UNIVESP posicionada exatamente acima da marca Wokwi -->
+                <img src="https://i0.wp.com/conectaprofessores.com/wp-content/uploads/2026/02/univesp.png?resize=930%2C620&ssl=1" alt="Logo UNIVESP" class="wokwi-logo">
+            </div>
+            <iframe src="https://wokwi.com/projects/476409068155514881" title="Wokwi Simulator Duino-Coin"></iframe>
+        </div>
+
+        <div class="panel">
+            <h3>Oscilador Sonoro do Bloco</h3>
+            <canvas id="waveCanvas" width="435" height="140"></canvas>
+        </div>
+
+        <div class="panel">
+            <h3>Últimos Hashes & Transições Monitoradas</h3>
+            <ul id="hashList" class="hash-list">
+                <li class="hash-item">Aguardando inicialização da rede...</li>
+            </ul>
+        </div>
+
+        <div class="matrix-status">
+            <div>Índice Alan Paz ($n$): <span id="statN">0</span></div>
+            <div>Frequência Atual: <span id="statFreq">0 Hz</span></div>
+            <div>Prob. Hardware: <span id="statProb">0.00%</span></div>
+            <div>Status de Fraude: <span id="statFraud" style="color:#04d361;">NORMAL</span></div>
+        </div>
+    </div>
+
+    <script>
+        const waveCanvas = document.getElementById('waveCanvas');
+        const waveCtx = waveCanvas.getContext('2d');
+        const holoCanvas = document.getElementById('holoCanvas');
+        const holoCtx = holoCanvas.getContext('2d');
+        const startBtn = document.getElementById('startBtn');
+
+        let audioCtx = null;
+        let isRunning = false;
+        let fetchInterval = null;
+        let osc = null;
+        let gainNode = null;
+        let pannerNode = null;
+
+        let historyValues = [];
+        const maxHistory = 100;
+        let nodes3D = [];
+        let globalTraceHistory = [];
+        let angleX = 0;
+        let angleY = 0;
+        let searchedHashQuery = "";
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (!osc) {
+                osc = audioCtx.createOscillator();
+                gainNode = audioCtx.createGain();
+                pannerNode = audioCtx.createStereoPanner ? audioCtx.createStereoPanner() : null;
+
+                osc.type = 'triangle';
+                gainNode.gain.setValueAtTime(0.03, audioCtx.currentTime);
+
+                if (pannerNode) {
+                    osc.connect(pannerNode);
+                    pannerNode.connect(gainNode);
+                } else {
+                    osc.connect(gainNode);
+                }
+                gainNode.connect(audioCtx.destination);
+                osc.start();
+            }
+        }
+
+        function indexToFrequency(base, n) {
+            return base * Math.pow(2, n / 12);
+        }
+
+        function hashToTuringIndex(hashStr) {
+            let sum = 0;
+            for (let i = 0; i < Math.min(hashStr.length, 8); i++) {
+                sum += hashStr.charCodeAt(i);
+            }
+            return (sum % 13) - 6;
+        }
+
+        function hashToVector3D(hashStr, minerName) {
+            let xVal = 0, yVal = 0, zVal = 0;
+            for (let i = 0; i < hashStr.length; i++) {
+                let code = hashStr.charCodeAt(i);
+                if (i % 3 === 0) xVal += code;
+                else if (i % 3 === 1) yVal += code;
+                else zVal += code;
+            }
+            let hwProbability = ((xVal + yVal + zVal) % 999) / 100 + 0.05;
+            let isSpoofed = (hwProbability > 9.5 || (hashStr.length > 0 && hashStr.charCodeAt(0) % 7 === 0));
+
+            let nodeObj = {
+                x: ((xVal % 260) - 130),
+                y: ((yVal % 200) - 100),
+                z: ((zVal % 260) - 130),
+                hash: hashStr,
+                shortHash: hashStr.substring(0, 10),
+                miner: minerName || 'AVR/ESP',
+                probability: hwProbability.toFixed(2),
+                spoof: isSpoofed,
+                timestamp: new Date().toLocaleTimeString()
+            };
+
+            globalTraceHistory.unshift(nodeObj);
+            if (globalTraceHistory.length > 200) globalTraceHistory.pop();
+
+            return nodeObj;
+        }
+
+        function toggleSystem() {
+            if (!isRunning) {
+                initAudio();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                fetchDucoData();
+                fetchInterval = setInterval(fetchDucoData, 6000);
+
+                isRunning = true;
+                startBtn.innerText = "Desativar Sistema";
+                startBtn.classList.add('active');
+            } else {
+                stopSystem();
+            }
+        }
+
+        function stopSystem() {
+            clearInterval(fetchInterval);
+            if (osc) {
+                gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.1);
+                setTimeout(() => {
+                    osc.stop();
+                    osc.disconnect();
+                    osc = null;
+                }, 100);
+            }
+            isRunning = false;
+            startBtn.innerText = "Ativar Sistema Integrado";
+            startBtn.classList.remove('active');
+        }
+
+        async function fetchDucoData() {
+            try {
+                let response = await fetch('https://server.duinocoin.com/lastblocks');
+                let data = await response.json();
+
+                if (data && data.result) {
+                    let blocks = data.result;
+                    nodes3D = blocks.slice(0, 14).map(b => {
+                        let h = b.hash || b.name || "DUCO_BLOCK";
+                        let m = b.miner || "Node";
+                        return hashToVector3D(h, m);
+                    });
+                    updateUIFromActiveNode();
+                }
+            } catch (e) {
+                nodes3D = [];
+                for(let i=0; i<12; i++) {
+                    let mock = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+                    nodes3D.push(hashToVector3D(mock, i % 3 === 0 ? "ESP32-Fake" : "Arduino Nano"));
+                }
+                updateUIFromActiveNode();
+            }
+        }
+
+        function searchHashInNetwork() {
+            searchedHashQuery = document.getElementById('searchHashInput').value.trim().toLowerCase();
+        }
+
+        function updateUIFromActiveNode() {
+            if (nodes3D.length === 0) return;
+            let active = nodes3D[0];
+            let n = hashToTuringIndex(active.hash);
+            let freq = indexToFrequency(220, n);
+
+            if (audioCtx && osc) {
+                osc.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.1);
+            }
+            if (pannerNode && pannerNode.pan) {
+                let pan = Math.max(-1, Math.min(1, active.x / 130));
+                pannerNode.pan.setTargetAtTime(pan, audioCtx.currentTime, 0.1);
+            }
+
+            historyValues.push((n + 6) / 12);
+            if (historyValues.length > maxHistory) historyValues.shift();
+
+            document.getElementById('statN').innerText = n;
+            document.getElementById('statFreq').innerText = `${freq.toFixed(2)} Hz`;
+            document.getElementById('statProb').innerText = `${active.probability}%`;
+
+            let fraudElem = document.getElementById('statFraud');
+            let fraudBadge = document.getElementById('fraudStatusBadge');
+            if (active.spoof) {
+                fraudElem.innerText = "ALERTA DE SPOOFING!";
+                fraudElem.className = "fraud-alert";
+                fraudBadge.innerText = "[ALERTA: FRAUDE DETECTADA]";
+                fraudBadge.style.color = "#ff0055";
+            } else {
+                fraudElem.innerText = "NORMAL";
+                fraudElem.className = "";
+                fraudBadge.innerText = "[Rede Segura]";
+                fraudBadge.style.color = "#04d361";
+            }
+
+            let listEl = document.getElementById('hashList');
+            listEl.innerHTML = '';
+            nodes3D.slice(0, 6).forEach(b => {
+                let li = document.createElement('li');
+                li.className = `hash-item ${b.spoof ? 'fraud' : ''}`;
+                li.innerHTML = `<span>${b.shortHash}</span> <i>${b.miner} ${b.spoof ? '[SPOOF!]' : ''}</i>`;
+                listEl.appendChild(li);
+            });
+
+            redrawWave();
+        }
+
+        function renderLoop() {
+            holoCtx.fillStyle = '#070709';
+            holoCtx.fillRect(0, 0, holoCanvas.width, holoCanvas.height);
+
+            if (nodes3D.length > 0 && isRunning) {
+                angleX += 0.006;
+                angleY += 0.01;
+
+                let cx = holoCanvas.width / 2;
+                let cy = holoCanvas.height / 2;
+
+                nodes3D.forEach((node, index) => {
+                    let radX = angleX;
+                    let radY = angleY;
+
+                    let x1 = node.x * Math.cos(radY) - node.z * Math.sin(radY);
+                    let z1 = node.z * Math.cos(radY) + node.x * Math.sin(radY);
+                    let y1 = node.y * Math.cos(radX) - z1 * Math.sin(radX);
+                    let z2 = z1 * Math.cos(radX) + node.y * Math.sin(radX);
+
+                    let fov = 280;
+                    let scale = fov / (fov + z2 + 150);
+                    let screenX = cx + x1 * scale;
+                    let screenY = cy + y1 * scale;
+
+                    let isSearchedMatch = searchedHashQuery && node.hash.toLowerCase().includes(searchedHashQuery);
+                    let radius = isSearchedMatch ? 10 : (index === 0 ? 6 : 4);
+
+                    if (node.spoof) {
+                        holoCtx.fillStyle = '#ff0055';
+                    } else if (isSearchedMatch) {
+                        holoCtx.fillStyle = '#ffff00';
+                    } else {
+                        holoCtx.fillStyle = index === 0 ? '#00ffcc' : '#ffa100';
+                    }
+
+                    holoCtx.beginPath();
+                    holoCtx.arc(screenX, screenY, radius, 0, Math.PI * 2);
+                    holoCtx.fill();
+
+                    if (isSearchedMatch) {
+                        holoCtx.strokeStyle = '#ffff00';
+                        holoCtx.lineWidth = 2;
+                        holoCtx.beginPath();
+                        holoCtx.arc(screenX, screenY, 16, 0, Math.PI * 2);
+                        holoCtx.stroke();
+                    }
+
+                    holoCtx.font = "10px monospace";
+                    holoCtx.fillStyle = node.spoof ? '#ff0055' : (isSearchedMatch ? '#ffff00' : '#a8a8b3');
+                    holoCtx.fillText(`${node.shortHash} ${node.spoof ? '[SPOOF]' : ''}`, screenX + 10, screenY - 4);
+                });
+            }
+
+            requestAnimationFrame(renderLoop);
+        }
+
+        function redrawWave() {
+            waveCtx.fillStyle = '#0b0b0e';
+            waveCtx.fillRect(0, 0, waveCanvas.width, waveCanvas.height);
+
+            waveCtx.strokeStyle = '#202028';
+            waveCtx.lineWidth = 1;
+            waveCtx.beginPath();
+            waveCtx.moveTo(0, waveCanvas.height / 2);
+            waveCtx.lineTo(waveCanvas.width, waveCanvas.height / 2);
+            waveCtx.stroke();
+
+            if (historyValues.length < 2) return;
+
+            waveCtx.strokeStyle = '#00ffcc';
+            waveCtx.lineWidth = 2;
+            waveCtx.beginPath();
+            let stepX = waveCanvas.width / maxHistory;
+
+            for (let i = 0; i < historyValues.length; i++) {
+                let x = i * stepX;
+                let y = waveCanvas.height - (historyValues[i] * waveCanvas.height);
+                if (i === 0) waveCtx.moveTo(x, y);
+                else waveCtx.lineTo(x, y);
+            }
+            waveCtx.stroke();
+        }
+
+        function exportTraceLogTXT() {
+            if (globalTraceHistory.length === 0) {
+                alert("Nenhum dado capturado ainda. Ative o sistema e aguarde algumas leituras.");
+                return;
+            }
+
+            let logContent = "=========================================================\n";
+            logContent += " RELATÓRIO DE RASTREAMENTO & SPOOFING - DUINO-COIN (ALAN PAZ)\n";
+            logContent += " TCC 2026 - GRUPO TEMA: AIMS AUDIT\n";
+            logContent += " Data/Hora de Exportação: " + new Date().toLocaleString() + "\n";
+            logContent += "=========================================================\n\n";
+
+            globalTraceHistory.forEach((item, idx) => {
+                logContent += `[TRAÇO #${idx + 1}] - Horário: ${item.timestamp}\n`;
+                logContent += ` ID Hash Completo : ${item.hash}\n`;
+                logContent += ` Minerador/Hardware: ${item.miner}\n`;
+                logContent += ` Coordenadas 3D  : X=${item.x.toFixed(2)}, Y=${item.y.toFixed(2)}, Z=${item.z.toFixed(2)}\n`;
+                logContent += ` Prob. Hardware  : ${item.probability}%\n`;
+                logContent += ` Status de Fraude: ${item.spoof ? 'ALERTA DE SPOOFING (ANÔMALO)' : 'NORMAL / SEGURO'}\n`;
+                logContent += "---------------------------------------------------------\n";
+            });
+
+            let blob = new Blob([logContent], { type: 'text/plain;charset=utf-8' });
+            let url = URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = `TCC2026_AIMS_Audit_Trace_Log_${Date.now()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        renderLoop();
+    </script>
+</body>
+</html>
